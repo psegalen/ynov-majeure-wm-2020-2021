@@ -8,13 +8,12 @@ admin.initializeApp({
 });
 
 const playersRoute = require("./players");
-
-exports.helloWorld = functions
-  .region("europe-west1")
-  .https.onRequest((request, response) => {
-    response.send("Hello World!");
-  });
+const questionsRoute = require("./questions");
 
 exports.players = functions
   .region("europe-west1")
   .https.onRequest((req, res) => playersRoute(admin, req, res));
+
+exports.questions = functions
+  .region("europe-west1")
+  .https.onRequest((req, res) => questionsRoute(admin, req, res));
