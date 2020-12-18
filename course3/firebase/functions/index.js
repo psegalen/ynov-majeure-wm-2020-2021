@@ -9,6 +9,7 @@ admin.initializeApp({
 
 const playersRoute = require("./players");
 const questionsRoute = require("./questions");
+const gameRoute = require("./game");
 
 exports.players = functions
   .region("europe-west1")
@@ -17,3 +18,7 @@ exports.players = functions
 exports.questions = functions
   .region("europe-west1")
   .https.onRequest((req, res) => questionsRoute(admin, req, res));
+
+exports.game = functions
+  .region("europe-west1")
+  .https.onRequest((req, res) => gameRoute(admin, req, res));

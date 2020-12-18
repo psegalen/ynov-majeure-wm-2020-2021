@@ -4,8 +4,8 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
-import Authentication from "./Authentication";
-import Game from "./Game";
+import Authentication from "./src/Auth/Authentication";
+import Game from "./src/Game/Game";
 
 const initFirebase = () => {
   const firebaseConfig = {
@@ -39,8 +39,8 @@ const App = () => {
         console.log("Anonymous detected!");
         setIsAuthenticated(false);
       }
+      setIsLoading(false);
     });
-    setIsLoading(false);
   }, []);
 
   const appBody = isLoading ? (

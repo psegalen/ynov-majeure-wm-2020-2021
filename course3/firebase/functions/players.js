@@ -45,6 +45,30 @@ const getPlayerById = async (id, admin, res) => {
   }
 };
 
+const createPlayer = async (admin, req, res) => {
+  const { userId, name } = req.body;
+  console.log("Creating player", userId, name);
+
+  if (!userId) {
+    res.status(400).json({
+      status: "error",
+      error: "UserId is mandatory!",
+    });
+  } else {
+    await admin
+      .firestore()
+      .collection("players")
+      .doc(userId)
+      .set({
+        games: [],
+        name: name || `Player${parseInt(Math.random() * 1000, 10)}`,
+        update_date: admin.firestore.Timestamp.now(),
+      });
+
+    res.send({ status: "ok" });
+  }
+};
+
 module.exports = async (admin, req, res) => {
   try {
     if (req.method === "GET") {
@@ -56,7 +80,7 @@ module.exports = async (admin, req, res) => {
         return await getPlayers(admin, res);
       }
     } else if (req.method === "POST") {
-      // TODO : create player
+      return await createPlayer(admin, req, res);
     }
     res.status(400).json({
       status: "error",

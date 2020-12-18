@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Alert } from "react-native";
 import { Layout, Text, Input, Button } from "@ui-kitten/components";
 import * as firebase from "firebase";
+import api from "../api";
 
 const Authentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [playerName, setPlayerName] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
   const signin = () => {
     firebase
@@ -26,8 +28,14 @@ const Authentication = () => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((userCreds) => {
-        console.log(userCreds.user.uid);
-        Alert.alert("Success", `User UID: ${userCreds.user.uid}`);
+        // Create the player in firestore
+        api.createPlayer(userCreds.user.uid, playerName).then(() => {
+          console.log(userCreds.user.uid);
+          Alert.alert(
+            "Success",
+            "Your account was successfuly created!"
+          );
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -46,13 +54,23 @@ const Authentication = () => {
           borderRadius: 16,
           backgroundColor: "#C9E0FF",
           padding: 24,
-          height: 350,
+          height: 400,
           justifyContent: "space-evenly",
         }}
       >
         <Text category="h1" style={{ textAlign: "center" }}>
           Authentication
         </Text>
+        {isSigningUp ? (
+          <>
+            <Text>Name</Text>
+            <Input
+              value={playerName}
+              onChangeText={(text) => setPlayerName(text)}
+              placeholder="Toto Toto"
+            />
+          </>
+        ) : undefined}
         <Text>Email</Text>
         <Input
           value={email}
