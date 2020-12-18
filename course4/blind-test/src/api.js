@@ -39,7 +39,7 @@ const api = {
       .auth()
       .currentUser.getIdToken()
       .then((token) =>
-        fetch("http://localhost:5001/ynov-b3-21/europe-west1/game", {
+        fetch(`${apiRoot}game`, {
           method: "POST",
           headers: {
             BlindTestToken: token,
