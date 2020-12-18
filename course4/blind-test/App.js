@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import * as firebase from "firebase";
+import * as eva from "@eva-design/eva";
+import { ApplicationProvider } from "@ui-kitten/components";
 import Authentication from "./Authentication";
+import Game from "./Game";
 
 const initFirebase = () => {
   const firebaseConfig = {
@@ -22,17 +25,37 @@ const initFirebase = () => {
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
     // Launch procedure: called each time the app starts
     initFirebase();
+    firebase.auth().onAuthStateChanged((user) => {
+      // Will be called each time auth changes
+      if (user) {
+        console.log("Auth detected!");
+        console.log(user.uid);
+        setIsAuthenticated(true);
+      } else {
+        console.log("Anonymous detected!");
+        setIsAuthenticated(false);
+      }
+    });
     setIsLoading(false);
   }, []);
 
+  const appBody = isLoading ? (
+    <ActivityIndicator />
+  ) : isAuthenticated ? (
+    <Game />
+  ) : (
+    <Authentication />
+  );
+
   return (
-    <View style={styles.container}>
-      {isLoading ? <ActivityIndicator /> : <Authentication />}
+    <ApplicationProvider {...eva} theme={eva.light}>
+      {appBody}
       <StatusBar style="auto" />
-    </View>
+    </ApplicationProvider>
   );
 };
 
