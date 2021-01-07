@@ -9,9 +9,6 @@ const Game = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(-1);
-  const signout = () => {
-    firebase.auth().signOut();
-  };
   const getNewGame = () => {
     // Call /questions on the API
     api.getQuestions().then((questions) => {
@@ -35,13 +32,15 @@ const Game = () => {
   return (
     <Layout
       style={{
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         alignItems: "center",
         flex: 1,
         padding: 32,
       }}
     >
-      <Text category="h1">Game</Text>
+      <Text category="h1" style={{ marginBottom: 64 }}>
+        Game
+      </Text>
       {answers && answers.length > 0 ? (
         <Layout>
           <Text category="h2">Votre score: {score}</Text>
@@ -53,9 +52,6 @@ const Game = () => {
       ) : (
         <Button onPress={() => getNewGame()}>New Game</Button>
       )}
-      <Button onPress={() => signout()} appearance="outline">
-        Sign Out
-      </Button>
     </Layout>
   );
 };

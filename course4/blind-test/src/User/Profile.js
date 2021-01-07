@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { Layout, Text } from "@ui-kitten/components";
+import { Button, Layout, Text } from "@ui-kitten/components";
 import {
   Alert,
   Image,
@@ -85,23 +85,28 @@ const Profile = () => {
       }
     }
   };
+  const signout = () => {
+    firebase.auth().signOut();
+  };
 
   return (
     <Layout style={styles.container}>
-      <TouchableOpacity onPress={openAvatarDialog}>
-        <Image
-          source={{
-            uri:
-              player.avatar ||
-              "https://static.thenounproject.com/png/363640-200.png",
-          }}
-          style={styles.profilePic}
-        />
-      </TouchableOpacity>
-      <Text category="h1">Hello {player.name}!</Text>
-      <Text category="h3">
-        You played {player.nb_played_games} games!
-      </Text>
+      <Layout style={styles.container}>
+        <TouchableOpacity onPress={openAvatarDialog}>
+          <Image
+            source={{
+              uri:
+                player.avatar ||
+                "https://static.thenounproject.com/png/363640-200.png",
+            }}
+            style={styles.profilePic}
+          />
+        </TouchableOpacity>
+        <Text category="h1">Hello {player.name}!</Text>
+      </Layout>
+      <Button onPress={() => signout()} appearance="outline">
+        Sign Out
+      </Button>
     </Layout>
   );
 };
@@ -114,6 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    padding: 32,
   },
   profilePic: {
     height: 200,

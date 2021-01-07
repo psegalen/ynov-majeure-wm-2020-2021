@@ -15,7 +15,6 @@ const Authentication = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCreds) => {
         console.log(userCreds.user.uid);
-        Alert.alert("Success", `User UID: ${userCreds.user.uid}`);
       })
       .catch((err) => {
         console.log(err);
