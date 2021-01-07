@@ -54,6 +54,32 @@ const api = {
             return null;
           })
       ),
+  getPlayer: () =>
+    fetch(`${apiRoot}players?id=${firebase.auth().currentUser.uid}`)
+      .then((result) => result.json())
+      .catch((err) => {
+        console.log(err);
+        return null;
+      }),
+  updatePlayerAvatar: (avatarUrl) =>
+    firebase
+      .auth()
+      .currentUser.getIdToken()
+      .then((token) =>
+        fetch(`${apiRoot}players`, {
+          method: "PATCH",
+          headers: {
+            BlindTestToken: token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ avatar: avatarUrl }),
+        })
+          .then((result) => result.json())
+          .catch((err) => {
+            console.log(err);
+            return null;
+          })
+      ),
 };
 
 export default api;

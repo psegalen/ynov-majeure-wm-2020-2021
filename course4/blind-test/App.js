@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native";
 import * as firebase from "firebase";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
-import Authentication from "./src/Auth/Authentication";
+import Authentication from "./src/User/Authentication";
 import Game from "./src/Game/Game";
+import Profile from "./src/User/Profile";
 
 const initFirebase = () => {
   const firebaseConfig = {
@@ -46,7 +47,7 @@ const App = () => {
   const appBody = isLoading ? (
     <ActivityIndicator />
   ) : isAuthenticated ? (
-    <Game />
+    <Profile />
   ) : (
     <Authentication />
   );
@@ -60,12 +61,3 @@ const App = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
