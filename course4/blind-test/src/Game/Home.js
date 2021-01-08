@@ -1,13 +1,10 @@
 import { Button, Layout, Text } from "@ui-kitten/components";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Image, StyleSheet } from "react-native";
-import api from "../api";
+import { PlayerContext } from "../data/PlayerContext";
 
 const Home = ({ navigation }) => {
-  const [player, setPlayer] = useState({});
-  useEffect(() => {
-    api.getPlayer().then((data) => setPlayer(data.player));
-  }, []);
+  const { player } = useContext(PlayerContext);
   return (
     <Layout style={styles.container}>
       <Layout style={styles.header}>

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Platform,
@@ -16,6 +16,11 @@ import Authentication from "./src/User/Authentication";
 import Game from "./src/Game/Game";
 import Profile from "./src/User/Profile";
 import Home from "./src/Game/Home";
+import {
+  PlayerContext,
+  PlayerProvider,
+} from "./src/data/PlayerContext";
+import api from "./src/api";
 
 const initFirebase = () => {
   const firebaseConfig = {
@@ -49,6 +54,7 @@ const HomeStack = () => (
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const playerContext = useContext(PlayerContext);
   useEffect(() => {
     // Launch procedure: called each time the app starts
     initFirebase();
@@ -58,11 +64,18 @@ const App = () => {
         console.log("Auth detected!");
         console.log(user.uid);
         setIsAuthenticated(true);
+        if (!playerContext.player.hasOwnProperty("id")) {
+          // Player has not been fetched yet
+          api.getPlayer().then((data) => {
+            playerContext.setPlayer(data.player);
+            setIsLoading(false);
+          });
+        }
       } else {
         console.log("Anonymous detected!");
         setIsAuthenticated(false);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
   }, []);
 
@@ -126,4 +139,10 @@ const App = () => {
   );
 };
 
-export default App;
+const ContextContainer = () => (
+  <PlayerProvider>
+    <App />
+  </PlayerProvider>
+);
+
+export default ContextContainer;
