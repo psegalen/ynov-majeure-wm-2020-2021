@@ -1,41 +1,23 @@
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   Platform,
   SafeAreaView,
 } from "react-native";
-import * as firebase from "firebase";
 import * as eva from "@eva-design/eva";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ApplicationProvider } from "@ui-kitten/components";
+import { ApplicationProvider, Layout } from "@ui-kitten/components";
 import { Provider, useSelector, useDispatch } from "react-redux";
 import Authentication from "./src/User/Authentication";
 import Game from "./src/Game/Game";
 import Profile from "./src/User/Profile";
 import Home from "./src/Game/Home";
-import api from "./src/api";
 import { store } from "./src/data/store";
-import { setPlayer } from "./src/data/playerActions";
-
-const initFirebase = () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyAoi_dkAeY1FFdLPmWS5voHjbIxegqSzw8",
-    authDomain: "ynov-b3-21.firebaseapp.com",
-    projectId: "ynov-b3-21",
-    storageBucket: "ynov-b3-21.appspot.com",
-    messagingSenderId: "223121527532",
-    appId: "1:223121527532:web:3384aee092f596b0b00bc9",
-    measurementId: "G-VN2VY6XM1J",
-  };
-  // Initialize Firebase
-  if (firebase.apps.length === 0) {
-    firebase.initializeApp(firebaseConfig);
-  }
-};
+import { launchApp } from "./src/data/appEffects";
 
 const GameStack = createStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -51,36 +33,19 @@ const HomeStack = () => (
 );
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const player = useSelector((state) => state.player);
+  const isLoading = useSelector((state) => state.app.isLoading);
+  const isAuthenticated = useSelector(
+    (state) => state.app.user !== null
+  );
   const dispatch = useDispatch();
   useEffect(() => {
-    // Launch procedure: called each time the app starts
-    initFirebase();
-    firebase.auth().onAuthStateChanged((user) => {
-      // Will be called each time auth changes
-      if (user) {
-        console.log("Auth detected!");
-        console.log(user.uid);
-        setIsAuthenticated(true);
-        if (!player.hasOwnProperty("id")) {
-          // Player has not been fetched yet
-          api.getPlayer().then((data) => {
-            dispatch(setPlayer(data.player));
-            setIsLoading(false);
-          });
-        }
-      } else {
-        console.log("Anonymous detected!");
-        setIsAuthenticated(false);
-        setIsLoading(false);
-      }
-    });
+    dispatch(launchApp());
   }, []);
 
   const appBody = isLoading ? (
-    <ActivityIndicator />
+    <Layout style={{ flex: 1, justifyContent: "center" }}>
+      <ActivityIndicator color="#000" />
+    </Layout>
   ) : isAuthenticated ? (
     <NavigationContainer>
       <BottomTabs.Navigator

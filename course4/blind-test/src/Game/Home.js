@@ -1,5 +1,5 @@
 import { Button, Layout, Text } from "@ui-kitten/components";
-import React, { useContext } from "react";
+import React from "react";
 import { Image, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 

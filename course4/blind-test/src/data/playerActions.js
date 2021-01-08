@@ -9,7 +9,7 @@ export const setPlayer = (player) => ({
   player,
 });
 
-export const updatePlayerAvatar = (avatarUrl) => ({
+export const playerAvatarUpdated = (avatarUrl) => ({
   type: playerActions.UPDATE_PLAYER_AVATAR,
   avatarUrl,
 });

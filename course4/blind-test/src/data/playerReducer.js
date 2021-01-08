@@ -1,3 +1,4 @@
+import { appActions } from "./appActions";
 import { playerActions } from "./playerActions";
 
 export const playerReducer = (state = {}, action) => {
@@ -8,6 +9,8 @@ export const playerReducer = (state = {}, action) => {
       return { ...state, avatar: action.avatarUrl };
     case playerActions.INCREMENT_PLAYER_NB_PLAYED:
       return { ...state, nb_played_games: state.nb_played_games + 1 };
+    case appActions.USER_IS_ANONYMOUS:
+      return {};
     default:
       return state;
   }

@@ -1,46 +1,15 @@
 import React, { useState } from "react";
 import { Alert } from "react-native";
+import { useDispatch } from "react-redux";
 import { Layout, Text, Input, Button } from "@ui-kitten/components";
-import * as firebase from "firebase";
-import api from "../api";
+import { signin, signup } from "../firebase";
 
 const Authentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
-  const signin = () => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((userCreds) => {
-        console.log(userCreds.user.uid);
-      })
-      .catch((err) => {
-        console.log(err);
-        Alert.alert("Error", err.message);
-      });
-  };
-
-  const signup = () => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCreds) => {
-        // Create the player in firestore
-        api.createPlayer(userCreds.user.uid, playerName).then(() => {
-          console.log(userCreds.user.uid);
-          Alert.alert(
-            "Success",
-            "Your account was successfuly created!"
-          );
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        Alert.alert("Error", err.message);
-      });
-  };
+  const dispatch = useDispatch();
 
   return (
     <Layout
@@ -98,7 +67,17 @@ const Authentication = () => {
           </Button>
           <Button
             style={{ flex: 1, marginLeft: 8 }}
-            onPress={() => (isSigningUp ? signup() : signin())}
+            onPress={() =>
+              isSigningUp
+                ? signup(
+                    email,
+                    password,
+                    playerName,
+                    Alert.alert,
+                    dispatch
+                  )
+                : signin(email, password, Alert.alert, dispatch)
+            }
           >
             {isSigningUp ? "Sign Up" : "Sign In"}
           </Button>
