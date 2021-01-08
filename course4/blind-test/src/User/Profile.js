@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import { Button, Layout, Text } from "@ui-kitten/components";
 import {
@@ -9,7 +10,7 @@ import {
 } from "react-native";
 import * as firebase from "firebase";
 import api from "../api";
-import { PlayerContext } from "../data/PlayerContext";
+import { updatePlayerAvatar } from "../data/playerActions";
 
 const uploadImageAsync = async (uri) => {
   // Why are we using XMLHttpRequest? See:
@@ -41,7 +42,8 @@ const uploadImageAsync = async (uri) => {
 };
 
 const Profile = () => {
-  const playerContext = useContext(PlayerContext);
+  const player = useSelector((state) => state.player);
+  const dispatch = useDispatch();
 
   const openAvatarDialog = async () => {
     const {
@@ -75,7 +77,7 @@ const Profile = () => {
       console.log(apiResult);
 
       if (apiResult && apiResult.status === "ok") {
-        playerContext.setPlayerAvatar(avatarUrl);
+        dispatch(updatePlayerAvatar(avatarUrl));
       } else {
         Alert.alert("The avatar upload failed!");
       }
@@ -92,13 +94,13 @@ const Profile = () => {
           <Image
             source={{
               uri:
-                playerContext.player.avatar ||
+                player.avatar ||
                 "https://static.thenounproject.com/png/363640-200.png",
             }}
             style={styles.profilePic}
           />
         </TouchableOpacity>
-        <Text category="h1">Hello {playerContext.player.name}!</Text>
+        <Text category="h1">Hello {player.name}!</Text>
       </Layout>
       <Button onPress={() => signout()} appearance="outline">
         Sign Out

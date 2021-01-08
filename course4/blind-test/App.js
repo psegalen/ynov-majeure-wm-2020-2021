@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Platform,
@@ -12,15 +12,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ApplicationProvider } from "@ui-kitten/components";
+import { Provider, useSelector, useDispatch } from "react-redux";
 import Authentication from "./src/User/Authentication";
 import Game from "./src/Game/Game";
 import Profile from "./src/User/Profile";
 import Home from "./src/Game/Home";
-import {
-  PlayerContext,
-  PlayerProvider,
-} from "./src/data/PlayerContext";
 import api from "./src/api";
+import { store } from "./src/data/store";
+import { setPlayer } from "./src/data/playerActions";
 
 const initFirebase = () => {
   const firebaseConfig = {
@@ -54,7 +53,8 @@ const HomeStack = () => (
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const playerContext = useContext(PlayerContext);
+  const player = useSelector((state) => state.player);
+  const dispatch = useDispatch();
   useEffect(() => {
     // Launch procedure: called each time the app starts
     initFirebase();
@@ -64,10 +64,10 @@ const App = () => {
         console.log("Auth detected!");
         console.log(user.uid);
         setIsAuthenticated(true);
-        if (!playerContext.player.hasOwnProperty("id")) {
+        if (!player.hasOwnProperty("id")) {
           // Player has not been fetched yet
           api.getPlayer().then((data) => {
-            playerContext.setPlayer(data.player);
+            dispatch(setPlayer(data.player));
             setIsLoading(false);
           });
         }
@@ -140,9 +140,9 @@ const App = () => {
 };
 
 const ContextContainer = () => (
-  <PlayerProvider>
+  <Provider store={store}>
     <App />
-  </PlayerProvider>
+  </Provider>
 );
 
 export default ContextContainer;

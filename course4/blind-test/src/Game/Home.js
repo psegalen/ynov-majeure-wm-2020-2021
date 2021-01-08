@@ -1,10 +1,10 @@
 import { Button, Layout, Text } from "@ui-kitten/components";
 import React, { useContext } from "react";
 import { Image, StyleSheet } from "react-native";
-import { PlayerContext } from "../data/PlayerContext";
+import { useSelector } from "react-redux";
 
 const Home = ({ navigation }) => {
-  const { player } = useContext(PlayerContext);
+  const player = useSelector((state) => state.player);
   return (
     <Layout style={styles.container}>
       <Layout style={styles.header}>
