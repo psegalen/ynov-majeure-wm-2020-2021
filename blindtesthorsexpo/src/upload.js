@@ -1,6 +1,6 @@
 import * as firebase from "firebase";
 import * as ImagePicker from "expo-image-picker";
-import api from "./api";
+import ImageResizer from "react-native-image-resizer";
 
 const uploadImageAsync = async (uri) => {
   // Why are we using XMLHttpRequest? See:
@@ -32,9 +32,7 @@ const uploadImageAsync = async (uri) => {
 };
 
 export const openAvatarDialog = async (success, error) => {
-  const {
-    status,
-  } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (status !== "granted") {
     error(
       "To change your avatar, you need to give the app the permission to access to the camera and the media library!"
@@ -46,15 +44,25 @@ export const openAvatarDialog = async (success, error) => {
     mediaTypes: ImagePicker.MediaTypeOptions.All,
     allowsEditing: true,
     aspect: [4, 3],
-    quality: 1,
+    quality: 1
   });
 
   console.log(result);
 
   if (!result.cancelled) {
-    console.log("Let's upload this", result.uri);
+    // Resize image to 250*250 max
+    const resizeResult = await ImageResizer.createResizedImage(
+      result.uri,
+      500,
+      500,
+      "JPEG",
+      90
+    );
 
-    const avatarUrl = await uploadImageAsync(result.uri);
+    console.log("Let's upload this", resizeResult.uri);
+
+    // Actual upload action
+    const avatarUrl = await uploadImageAsync(resizeResult.uri);
 
     console.log("Avatar successfully uploaded", avatarUrl);
 

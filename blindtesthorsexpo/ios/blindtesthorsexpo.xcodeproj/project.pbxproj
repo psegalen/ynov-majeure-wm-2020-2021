@@ -63,6 +63,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = blindtesthorsexpo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C2A1406DD1D1FF74B2FD5AFB /* libPods-blindtesthorsexpo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blindtesthorsexpo-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED0D10E70E8DDE3F755B53B /* Pods-blindtesthorsexpo-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blindtesthorsexpo-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-blindtesthorsexpo-tvOS/Pods-blindtesthorsexpo-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D37B4E3D25B1A85300A044D1 /* blindtesthorsexpo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = blindtesthorsexpo.entitlements; path = blindtesthorsexpo/blindtesthorsexpo.entitlements; sourceTree = "<group>"; };
 		D6B20D25D8FD8AF92C3DED8F /* Pods-blindtesthorsexpo-blindtesthorsexpoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blindtesthorsexpo-blindtesthorsexpoTests.release.xcconfig"; path = "Target Support Files/Pods-blindtesthorsexpo-blindtesthorsexpoTests/Pods-blindtesthorsexpo-blindtesthorsexpoTests.release.xcconfig"; sourceTree = "<group>"; };
 		DAB8F0964F094D3BD4E16363 /* Pods-blindtesthorsexpo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blindtesthorsexpo.debug.xcconfig"; path = "Target Support Files/Pods-blindtesthorsexpo/Pods-blindtesthorsexpo.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -125,6 +126,7 @@
 		13B07FAE1A68108700A75B9A /* blindtesthorsexpo */ = {
 			isa = PBXGroup;
 			children = (
+				D37B4E3D25B1A85300A044D1 /* blindtesthorsexpo.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -293,6 +295,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = QUDTCK988D;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -654,7 +657,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = blindtesthorsexpo/blindtesthorsexpo.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QUDTCK988D;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = blindtesthorsexpo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -663,7 +668,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ynov.blindtest;
 				PRODUCT_NAME = blindtesthorsexpo;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -678,7 +683,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = blindtesthorsexpo/blindtesthorsexpo.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QUDTCK988D;
 				INFOPLIST_FILE = blindtesthorsexpo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -686,7 +693,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ynov.blindtest;
 				PRODUCT_NAME = blindtesthorsexpo;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

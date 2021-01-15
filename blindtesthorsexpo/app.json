@@ -1,4 +1,8 @@
 {
   "name": "blindtesthorsexpo",
-  "displayName": "Blind Test"
+  "displayName": "Blind Test",
+  "slug": "blindtest",
+  "ios": {
+    "bundleIdentifier": "com.ynov.blindtest"
+  }
 }
