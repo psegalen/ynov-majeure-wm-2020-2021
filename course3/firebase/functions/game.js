@@ -44,9 +44,44 @@ const handleAnswers = async (answers, playerDoc, admin, res) => {
   });
 };
 
+const getStats = async (admin, res) => {
+  console.log("Getting stats ....");
+
+  const playersSnapshot = await admin
+    .firestore()
+    .collection("players")
+    .get();
+
+  let nbPlayers = 0;
+  let nbGames = 0;
+  playersSnapshot.forEach((doc) => {
+    nbPlayers += 1;
+    nbGames += doc.data().games.length;
+  });
+
+  const questionsSnapshot = await admin
+    .firestore()
+    .collection("questions")
+    .get();
+
+  let nbQuestions = 0;
+  questionsSnapshot.forEach(() => {
+    nbQuestions += 1;
+  });
+
+  res.json({
+    status: "ok",
+    nbPlayers,
+    nbGames,
+    nbQuestions,
+  });
+};
+
 module.exports = async (admin, req, res) => {
   try {
-    if (req.method === "POST") {
+    if (req.method === "GET") {
+      return await getStats(admin, res);
+    } else if (req.method === "POST") {
       // Get token from headers
       const token = req.get("BlindTestToken");
 
