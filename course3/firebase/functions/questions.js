@@ -33,35 +33,87 @@ const getQuestionsForPlayer = async (playerDoc, admin, res) => {
   });
 };
 
+const createQuestion = async (playerDoc, admin, req, res) => {
+  const {
+    answers,
+    audio_url,
+    good_answer,
+    question,
+    type,
+  } = req.body;
+  if (
+    !answers ||
+    answers.length === 0 ||
+    !audio_url ||
+    !good_answer ||
+    !question ||
+    !type
+  ) {
+    res.status(400).json({
+      status: "error",
+      error:
+        'Body is incomplete, we need "answers" (non-empty table), "audio_url", "good_answer", "question" and "type"!',
+    });
+    return;
+  }
+
+  console.log("Creating question", playerDoc.id, question);
+
+  if (!playerDoc || !playerDoc.data().backOffice) {
+    res.status(400).json({
+      status: "error",
+      error: "Player is not allowed!",
+    });
+  } else {
+    await admin
+      .firestore()
+      .collection("questions")
+      .add({
+        answers,
+        audio_url,
+        good_answer,
+        question,
+        type,
+        creator: admin
+          .firestore()
+          .collection("players")
+          .doc(playerDoc.id),
+      });
+
+    res.send({ status: "ok" });
+  }
+};
+
 module.exports = async (admin, req, res) => {
   try {
+    // Get token from headers
+    const token = req.get("BlindTestToken");
+
+    // Get user from token
+    let verification;
+    try {
+      verification = await admin.auth().verifyIdToken(token);
+    } catch (err) {
+      console.log("Error while decoding token", err);
+      return res.status(400).json({
+        status: "error",
+        error: "Token couldn't be decoded!",
+        details: err.message,
+      });
+    }
+    const playerId = verification.uid;
+
+    // Get player from user
+    const playerDoc = await admin
+      .firestore()
+      .collection("players")
+      .doc(playerId)
+      .get();
+
     if (req.method === "GET") {
-      // Get token from headers
-      const token = req.get("BlindTestToken");
-
-      // Get user from token
-      let verification;
-      try {
-        verification = await admin.auth().verifyIdToken(token);
-      } catch (err) {
-        console.log("Error while decoding token", err);
-        return res.status(400).json({
-          status: "error",
-          error: "Token couldn't be decoded!",
-          details: err.message,
-        });
-      }
-      const playerId = verification.uid;
-
-      // Get player from user
-      const playerDoc = await admin
-        .firestore()
-        .collection("players")
-        .doc(playerId)
-        .get();
       return await getQuestionsForPlayer(playerDoc, admin, res);
     } else if (req.method === "POST") {
-      // TODO : create question
+      return await createQuestion(playerDoc, admin, req, res);
     }
     res.status(400).json({
       status: "error",
