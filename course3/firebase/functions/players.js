@@ -43,7 +43,10 @@ const getPlayerById = async (id, admin, res) => {
         name: data.name,
         update_date: data.update_date.seconds,
         nb_played_games: data.games.length,
-        avatar: data.avatar,
+        avatar:
+          data.avatar ||
+          "https://firebasestorage.googleapis.com/v0/b/ynov-b3-21.appspot.com/o/avatars%2FdefaultProfile.png?alt=media&token=be57f18e-4d7d-43d1-893a-b54e699c9bde",
+        backOffice: data.backOffice || false,
       },
     });
   } else {

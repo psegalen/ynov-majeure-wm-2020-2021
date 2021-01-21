@@ -7,18 +7,35 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
+// CORS Express middleware to enable CORS Requests.
+const cors = require("cors")({
+  origin: true,
+});
+
 const playersRoute = require("./players");
 const questionsRoute = require("./questions");
 const gameRoute = require("./game");
 
 exports.players = functions
   .region("europe-west1")
-  .https.onRequest((req, res) => playersRoute(admin, req, res));
+  .https.onRequest((req, res) =>
+    cors(req, res, async () => {
+      await playersRoute(admin, req, res);
+    })
+  );
 
 exports.questions = functions
   .region("europe-west1")
-  .https.onRequest((req, res) => questionsRoute(admin, req, res));
+  .https.onRequest((req, res) =>
+    cors(req, res, async () => {
+      await questionsRoute(admin, req, res);
+    })
+  );
 
 exports.game = functions
   .region("europe-west1")
-  .https.onRequest((req, res) => gameRoute(admin, req, res));
+  .https.onRequest((req, res) =>
+    cors(req, res, async () => {
+      await gameRoute(admin, req, res);
+    })
+  );
