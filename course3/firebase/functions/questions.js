@@ -1,4 +1,9 @@
-const getQuestionsForPlayer = async (playerDoc, admin, res) => {
+const getQuestionsForPlayer = async (
+  playerDoc,
+  admin,
+  res,
+  multi = false
+) => {
   console.log("Getting question for player", playerDoc.data().name);
   // TODO: get questions already played by player to avoid giving them to him again
 
@@ -24,13 +29,47 @@ const getQuestionsForPlayer = async (playerDoc, admin, res) => {
     }),
   });
 
-  res.json({
-    status: "ok",
-    questions: gameQuestions.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })),
-  });
+  if (!multi) {
+    res.json({
+      status: "ok",
+      questions: gameQuestions.map((doc) => {
+        const question = doc.data();
+        question.creator = question.creator.id;
+        return {
+          id: doc.id,
+          ...question,
+        };
+      }),
+    });
+  } else {
+    // Create game in games collection
+    const game = await admin
+      .firestore()
+      .collection("games")
+      .add({
+        creator: playerDoc.ref,
+        launch_time: admin.firestore.Timestamp.fromMillis(
+          new Date().getTime() + 30000
+        ),
+        questions: gameQuestions.map((doc) => doc.ref),
+        results: [],
+      });
+
+    // Send back questions + game details
+    res.json({
+      status: "ok",
+      questions: gameQuestions.map((doc) => {
+        const question = doc.data();
+        question.creator = question.creator.id;
+        return {
+          id: doc.id,
+          ...question,
+        };
+      }),
+      multi: true,
+      gameId: game.id,
+    });
+  }
 };
 
 const createQuestion = async (playerDoc, admin, req, res) => {
@@ -111,7 +150,12 @@ module.exports = async (admin, req, res) => {
       .get();
 
     if (req.method === "GET") {
-      return await getQuestionsForPlayer(playerDoc, admin, res);
+      return await getQuestionsForPlayer(
+        playerDoc,
+        admin,
+        res,
+        req.query.multi
+      );
     } else if (req.method === "POST") {
       return await createQuestion(playerDoc, admin, req, res);
     }
