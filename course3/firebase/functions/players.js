@@ -8,6 +8,13 @@ const getPlayers = async (admin, res) => {
     .get();
 
   querySnapshot.forEach((doc) => {
+    const games = [];
+    doc.data().games.forEach((g) => {
+      games.push({
+        nb_questions: g.questions.length,
+        play_date: g.play_date.toMillis(),
+      });
+    });
     players.push({
       id: doc.id,
       name: doc.data().name,
@@ -15,6 +22,7 @@ const getPlayers = async (admin, res) => {
         doc.data().avatar ||
         "https://firebasestorage.googleapis.com/v0/b/ynov-b3-21.appspot.com/o/avatars%2FdefaultProfile.png?alt=media&token=be57f18e-4d7d-43d1-893a-b54e699c9bde",
       nbGames: doc.data().games.length,
+      games,
       backOffice: doc.data().backOffice || false,
     });
   });
